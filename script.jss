@@ -53,3 +53,8 @@
 
     applyFilters();
 })();
+
+window.addEventListener("load", function() {
+    const event = new Event("input");
+    document.getElementById("q").dispatchEvent(event);
+});
