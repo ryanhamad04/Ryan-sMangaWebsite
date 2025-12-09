@@ -1,74 +1,50 @@
-(function () {
+/* ================================
+   BROWSE PAGE FILTERING (ONLY)
+================================ */
 
-  const qInput = document.getElementById("q");
-  const genreSel = document.getElementById("genre");
-  const statusSel = document.getElementById("status");
-  const resetBtn = document.getElementById("reset-filters");
-  const countSpan = document.getElementById("match-count");
-  const cards = Array.from(document.querySelectorAll(".book-card"));
+const browseCards = Array.from(document.querySelectorAll(".browse .book-card"));
 
-  function norm(s) {
-    return (s || "").toLowerCase().trim();
-  }
+// Add listeners for filtering
+document.querySelectorAll("#filters input, #filters select").forEach(control => {
+  control.addEventListener("input", applyFilters);
+});
 
-  // Check if a card matches ALL filters
-  function matches(card) {
+// Reset button
+document.querySelector("#reset-filters").addEventListener("click", () => {
+  setTimeout(applyFilters, 10); // Let UI update first
+});
 
-    const q = norm(qInput?.value);
-    const genre = norm(genreSel?.value);
-    const status = norm(statusSel?.value);
+function applyFilters() {
+  const q = document.querySelector("#q").value.toLowerCase().trim();
+  const genre = document.querySelector("#genre").value.toLowerCase();
+  const status = document.querySelector("#status").value.toLowerCase();
 
-    const title = norm(card.dataset.title);
-    const author = norm(card.dataset.author);
+  let matchCount = 0;
 
-    // MULTIPLE GENRES SUPPORT
-    const genreValues = (card.dataset.genres || "")
-      .toLowerCase()
-      .split(",")
-      .map(norm);
+  browseCards.forEach(card => {
+    const title = card.dataset.title;
+    const author = card.dataset.author;
+    const genres = card.dataset.genres;
+    const statuses = card.dataset.status;
 
-    // MULTIPLE STATUS SUPPORT
-    const statusValues = (card.dataset.status || "")
-      .toLowerCase()
-      .split(",")
-      .map(norm);
+    const matchesQ =
+      !q || title.includes(q) || author.includes(q);
 
-    const textOK = !q || title.includes(q) || author.includes(q);
-    const genreOK = !genre || genreValues.includes(genre);
-    const statusOK = !status || statusValues.includes(status);
+    const matchesGenre =
+      !genre || genres.includes(genre);
 
-    return textOK && genreOK && statusOK;
-  }
+    const matchesStatus =
+      !status || statuses.includes(status);
 
-  function applyFilters() {
-    let visible = 0;
+    const visible = matchesQ && matchesGenre && matchesStatus;
 
-    cards.forEach(card => {
-      if (matches(card)) {
-        card.style.display = "";
-        card.classList.remove("hidden");
-        visible++;
-      } else {
-        card.style.display = "none";
-        card.classList.add("hidden");
-      }
-    });
+    card.style.display = visible ? "" : "none";
 
-    if (countSpan) countSpan.textContent = visible;
-  }
+    if (visible) matchCount++;
+  });
 
-  // Event Listeners
-  if (qInput) qInput.addEventListener("input", applyFilters);
-  if (genreSel) genreSel.addEventListener("change", applyFilters);
-  if (statusSel) statusSel.addEventListener("change", applyFilters);
+  document.querySelector("#match-count").textContent = matchCount;
+}
 
-  if (resetBtn) {
-    resetBtn.addEventListener("click", () => {
-      setTimeout(applyFilters, 0);
-    });
-  }
-
-  // Run once on load
-  applyFilters();
-
-})();
+// Run once when page loads
+window.addEventListener("load", applyFilters);
