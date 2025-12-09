@@ -1,60 +1,33 @@
-(function() {
-    const qInput = document.getElementById('q');
-    const genreSel = document.getElementById('genre');
-    const statusSel = document.getElementById('status');
-    const resetBtn = document.getElementById('reset-filters');
-    const countSpan = document.getElementById('match-count');
-    const cards = Array.from(document.querySelectorAll('.book-card'));
+function applyFilters() {
+  const q = qInput?.value.trim().toLowerCase() || "";
+  const genre = genreSelect?.value.toLowerCase() || "";
+  const status = statusSelect?.value.toLowerCase() || "";
 
-    function norm(s) {
-        return (s || '').toLowerCase().trim();
-    }
+  let count = 0;
 
-    function matches(card) {
-        const q = norm(qInput?.value);
-        const genre = norm(genreSel?.value);
-        const status = norm(statusSel?.value);
-        const title = (card.dataset.title || '').toLowerCase();
-        const author = (card.dataset.author || '').toLowerCase();
-        const genres = (card.dataset.genres || '').toLowerCase();
-        const statuses = (card.dataset.status || '').toLowerCase();
+  bookCards.forEach(book => {
+    const title = book.dataset.title.toLowerCase();
+    const author = book.dataset.author.toLowerCase();
 
-        const textOK = !q || title.includes(q) || author.includes(q);
-        const genreOK = !genre || genres.split(',').map(norm).includes(genre);
-        const statusOK = !status || statuses.split(',').map(norm).includes(status);
+    // MULTIPLE GENRES SUPPORT
+    const genreValues = book.dataset.genres.toLowerCase().split(",");
+    const matchesGenre = !genre || genreValues.includes(genre);
 
-        return textOK && genreOK && statusOK;
-    }
+    // MULTIPLE STATUS SUPPORT
+    const statusValues = book.dataset.status.toLowerCase().split(",");
+    const matchesStatus = !status || statusValues.includes(status);
 
-    function applyFilters() {
-        let visible = 0;
-        cards.forEach(card => {
-            if (matches(card)) {
-                card.classList.remove('hidden');
-                visible++;
-            } else {
-                card.classList.add('hidden');
-            }
-        });
-        if (countSpan) {
-            countSpan.textContent = visible;
-        }
-    }
+    const matchesSearch =
+      !q ||
+      title.includes(q) ||
+      author.includes(q);
 
-    if (qInput) qInput.addEventListener('input', applyFilters);
-    if (genreSel) genreSel.addEventListener('change', applyFilters);
-    if (statusSel) statusSel.addEventListener('change', applyFilters);
+    const shouldShow = matchesSearch && matchesGenre && matchesStatus;
 
-    if (resetBtn) {
-        resetBtn.addEventListener('click', () => {
-            setTimeout(applyFilters, 0);
-        });
-    }
+    book.style.display = shouldShow ? "" : "none";
 
-    applyFilters();
-})();
+    if (shouldShow) count++;
+  });
 
-window.addEventListener("load", function() {
-    const event = new Event("input");
-    document.getElementById("q").dispatchEvent(event);
-});
+  matchCount.textContent = count;
+}
