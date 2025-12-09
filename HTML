@@ -1,0 +1,1222 @@
+
+<style>
+  :root {
+    --ink: #111;
+    --bg: #fff;
+    --accent: #24a2ff;
+    --muted: #8b8b8b;
+  }
+
+  * {
+    box-sizing: border-box
+  }
+
+  html,
+  body {
+    height: 100%
+  }
+
+  body {
+    margin: 0;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', Arial, sans-serif;
+    letter-spacing: 1px;
+    color: var(--ink);
+    background: var(--bg);
+  }
+
+  /* Hide the radios used for tabs */
+  input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Header / Nav */
+  header.nav {
+    background: #000;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    border-bottom: 6px solid #000;
+  }
+
+  .logo {
+    font-size: 38px;
+  }
+
+  nav {
+    display: flex;
+    gap: 22px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  nav label {
+    color: #fff;
+    text-decoration: none;
+    font-size: 34px;
+    cursor: pointer;
+    user-select: none;
+    padding: 4px 6px;
+    border-bottom: 4px solid transparent;
+  }
+
+  nav label:hover {
+    color: #d7eaff;
+  }
+
+  /* Active link color and underline */
+  #nav-home:checked~header.nav nav label[for="nav-home"],
+  #nav-browse:checked~header.nav nav label[for="nav-browse"],
+  #nav-about:checked~header.nav nav label[for="nav-about"],
+  #nav-contact:checked~header.nav nav label[for="nav-contact"] {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  /* Pages container */
+  main {
+    min-height: calc(100vh - 190px);
+  }
+
+  /* Show only checked page */
+  .page {
+    display: none;
+  }
+
+  #nav-home:checked~main .home {
+    display: block;
+  }
+
+  #nav-browse:checked~main .browse {
+    display: block;
+  }
+
+  #nav-about:checked~main .about {
+    display: block;
+  }
+
+  #nav-contact:checked~main .contact {
+    display: block;
+  }
+
+  /* Shared blocks */
+  .wrap {
+    padding: 24px 4% 40px;
+  }
+
+  .page-title {
+    text-align: left;
+    font-size: 72px;
+    margin: 24px 4% 6px;
+  }
+
+  .block-title {
+    font-size: 64px;
+    margin: 0 0 12px 0;
+    text-align: right;
+  }
+
+  .divider {
+    height: 6px;
+    background: var(--ink);
+    width: 100%;
+    margin: 10px 0 26px;
+  }
+
+  /* HOME (left image + right 2x2 cards) */
+  .home-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 28px;
+    padding: 0 4% 10px;
+  }
+
+  .image-placeholder {
+    border: 6px solid var(--ink);
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 58vh;
+    font-size: 120px;
+    user-select: none;
+  }
+
+  /* ==== Book / Manga Cards ==== */
+  .grid-books {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(180px, 1fr));
+    gap: 22px;
+  }
+
+  .book-card {
+    border: 6px solid var(--ink);
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .book-cover {
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    width: 100%;
+    display: block;
+    background: #eee;
+  }
+
+  .book-body {
+    padding: 14px 14px 16px;
+    font-family: Arial, sans-serif;
+  }
+
+  .book-title {
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1.3;
+    margin: 0 0 6px;
+  }
+
+  .book-meta {
+    font-size: 13px;
+    color: #555;
+    margin: 0 0 10px;
+  }
+
+  .badges {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    border: 2px solid var(--ink);
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .5px;
+  }
+
+  .badge.accent {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* ==== Filters (Browse) ==== */
+  .filters {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr auto;
+    gap: 14px;
+    align-items: end;
+    margin: 14px 4% 20px;
+    font-family: Arial, sans-serif;
+  }
+
+  .filters label {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: .5px;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .filters select,
+  .filters input[type="search"] {
+    border: 4px solid var(--ink);
+    padding: 10px;
+    font-size: 16px;
+    width: 100%;
+    background: #fff;
+  }
+
+  .filters .btn {
+    border: 4px solid var(--ink);
+    padding: 10px 14px;
+    font-weight: 800;
+    background: #fff;
+    cursor: pointer;
+  }
+
+  .filters .btn:hover {
+    background: #f2f2f2;
+  }
+
+  .results-line {
+    margin: 0 4% 8px;
+    font-family: Arial, sans-serif;
+    color: #555;
+    font-size: 14px;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  /* BROWSE grid */
+  .browse .grid-books {
+    grid-template-columns: repeat(4, minmax(180px, 1fr));
+    padding: 0 4% 20px;
+  }
+
+  /* ABOUT (lorem ipsum box) */
+  .giant {
+    font-size: 78px;
+    margin: 10px 4% 0;
+  }
+
+  .body-box {
+    border: 8px solid var(--ink);
+    min-height: 52vh;
+    padding: 36px;
+    margin: 0 4%;
+    background: #fff;
+    display: block;
+    font-size: 22px;
+    line-height: 1.5;
+    font-family: Arial, sans-serif;
+  }
+
+  .body-box p {
+    margin: 0 0 14px;
+  }
+
+  /* CONTACT (form + socials as placeholders) */
+  .contact .box {
+    border: 8px solid var(--ink);
+    background: #fff;
+    margin: 20px 4%;
+    padding: 24px;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-top: 8px;
+  }
+
+  .form-grid .full {
+    grid-column: 1 / -1;
+  }
+
+  .fake-input {
+    border: 6px solid var(--ink);
+    padding: 18px;
+    font-family: Arial, sans-serif;
+    color: #777;
+    background: #fff;
+  }
+
+  .fake-textarea {
+    height: 180px;
+  }
+
+  .fake-btn {
+    border: 6px solid var(--ink);
+    padding: 16px;
+    text-align: center;
+    font-weight: bold;
+    background: #fff;
+    user-select: none;
+  }
+
+  /* Footer */
+  footer.footer {
+    text-align: center;
+    font-size: 34px;
+    padding: 26px 0 22px;
+    position: relative;
+  }
+
+  footer.footer::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 6px;
+    background: var(--ink);
+    top: 0;
+  }
+
+  .subline {
+    font-size: 18px;
+    color: #666;
+    font-family: Arial, sans-serif;
+    margin-top: 6px;
+  }
+
+  /* Responsive */
+  @media (max-width:1100px) {
+    .browse .grid-books {
+      grid-template-columns: repeat(2, minmax(160px, 1fr));
+    }
+  }
+
+  @media (max-width:900px) {
+    .page-title {
+      font-size: 50px;
+    }
+
+    .home-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .block-title {
+      text-align: left;
+      font-size: 42px;
+    }
+
+    .image-placeholder {
+      height: 40vh;
+      font-size: 64px;
+    }
+
+    nav label {
+      font-size: 26px;
+    }
+
+    .logo {
+      font-size: 30px;
+    }
+
+    .giant {
+      font-size: 46px;
+    }
+
+    .filters {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ===== Detail Panels (CSS-only via :target) ===== */
+  .detail-panel {
+    position: fixed;
+    inset: 0;
+    background: #fff;
+    z-index: 50;
+    border-top: 10px solid #000;
+    border-bottom: 10px solid #000;
+    display: none;
+    overflow: auto;
+    padding-bottom: 40px;
+  }
+
+  .detail-panel:target {
+    display: block;
+  }
+
+  .detail-wrap {
+    max-width: 1100px;
+    margin: 20px auto 60px;
+    padding: 0 4%;
+    font-family: Arial, sans-serif;
+    color: #111;
+  }
+
+  .detail-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 10px 0 14px;
+  }
+
+  .detail-title {
+    font-size: 40px;
+    font-weight: 800;
+    letter-spacing: .5px;
+  }
+
+  .detail-close {
+    border: 4px solid #111;
+    padding: 10px 14px;
+    text-decoration: none;
+    color: #111;
+    font-weight: 800;
+    letter-spacing: .5px;
+    display: inline-block;
+  }
+
+  .detail-close:hover {
+    background: #f2f2f2;
+  }
+
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 24px;
+  }
+
+  .detail-cover {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    border: 6px solid #111;
+    background: #eee;
+  }
+
+  .detail-section {
+    margin-bottom: 18px;
+  }
+
+  .detail-h {
+    font-weight: 800;
+    margin: 0 0 8px;
+    letter-spacing: .5px;
+  }
+
+  .detail-p {
+    margin: 0;
+    line-height: 1.6;
+    color: #222;
+  }
+
+  .detail-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-top: 14px;
+  }
+
+  .detail-box {
+    border: 6px solid #111;
+    padding: 14px;
+    background: #fff;
+  }
+
+  .detail-ul {
+    margin: 0;
+    padding-left: 18px;
+  }
+
+  .detail-ul li {
+    margin: 4px 0;
+  }
+
+  @media (max-width:900px) {
+    .detail-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .detail-title {
+      font-size: 28px;
+    }
+  }
+</style>
+
+<!-- Tabs -->
+<input type="radio" name="page" id="nav-home" checked>
+<input type="radio" name="page" id="nav-browse">
+<input type="radio" name="page" id="nav-about">
+<input type="radio" name="page" id="nav-contact">
+
+<header class="nav">
+  <div class="logo">Ryan's Manga Blog</div>
+  <nav>
+    <label for="nav-home">HOME</label>
+    <label for="nav-browse">BROWSE</label>
+    <label for="nav-about">ABOUT</label>
+    <label for="nav-contact">CONTACT</label>
+  </nav>
+</header>
+
+<main>
+  <!-- HOME -->
+  <section class="page home">
+    <h2 class="page-title">FAVORITE MANGA</h2>
+    <section class="home-grid">
+      <div class="left">
+        <div class="image-placeholder">IMAGE</div>
+      </div>
+      <div class="right">
+        <h3 class="block-title">NEWEST UPDATES</h3>
+        <div class="grid-books">
+          <a class="book-card" href="#onepiece" data-title="one piece" data-author="eiichiro oda" data-genres="adventure,shōnen" data-status="ongoing,popular">
+            <img class="book-cover" src="<img src="https://upload.wikimedia.org/wikipedia/en/2/2c/OnePieceVol1Cover.jpg">
+            <div class="book-body">
+              <p class="book-title">One Piece</p>
+              <p class="book-meta">Eiichiro Oda • Adventure</p>
+              <div class="badges"><span class="badge accent">Popular</span></div>
+            </div>
+          </a>
+
+          <a class="book-card" href="#demonslayer" data-title="demon slayer" data-author="koyoharu gotouge" data-genres="dark fantasy,shōnen" data-status="completed">
+            <img class="book-cover" src="https://upload.wikimedia.org/wikipedia/en/5/5d/Kimetsu_no_Yaiba_Volume_1.jpg">
+            <div class="book-body">
+              <p class="book-title">Demon Slayer: Kimetsu no Yaiba</p>
+              <p class="book-meta">Koyoharu Gotouge • Dark Fantasy</p>
+              <div class="badges"><span class="badge">Shōnen</span></div>
+            </div>
+          </a>
+
+          <a class="book-card" href="#spyfamily" data-title="spy x family" data-author="tatsuya endo" data-genres="comedy,slice of life" data-status="ongoing">
+            <img class="book-cover" src="https://upload.wikimedia.org/wikipedia/en/1/19/Spy_x_Family_volume_1_cover.jpg">
+            <div class="book-body">
+              <p class="book-title">SPY×FAMILY</p>
+              <p class="book-meta">Tatsuya Endo • Comedy</p>
+              <div class="badges"><span class="badge">Slice of Life</span></div>
+            </div>
+          </a>
+
+          <a class="book-card" href="#jjk" data-title="jujutsu kaisen" data-author="gege akutami" data-genres="supernatural,action" data-status="ongoing">
+            <img class="book-cover" src="https://upload.wikimedia.org/wikipedia/en/6/6f/Jujutsu_Kaisen_Volume_1.jpg">
+            <div class="book-body">
+              <p class="book-title">Jujutsu Kaisen</p>
+              <p class="book-meta">Gege Akutami • Supernatural</p>
+              <div class="badges"><span class="badge">Action</span></div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <!-- BROWSE -->
+  <section class="page browse">
+    <!-- Real filters -->
+    <form class="filters" id="filters">
+      <div>
+        <label for="q">Search (title/author)</label>
+        <input id="q" name="q" type="search" placeholder="e.g., naruto, oda, titan">
+      </div>
+
+      <div>
+        <label for="genre">Genre</label>
+        <select id="genre" name="genre">
+          <option value="">All genres</option>
+          <option>Action</option>
+          <option>Adventure</option>
+          <option>Comedy</option>
+          <option>Crime Noir</option>
+          <option>Dark Fantasy</option>
+          <option>Detective</option>
+          <option>Fantasy</option>
+          <option>Horror</option>
+          <option>Mystery</option>
+          <option>Shōnen</option>
+          <option>Slice of Life</option>
+          <option>Space Opera</option>
+          <option>Superhero</option>
+          <option>Supernatural</option>
+          <option>Thriller</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="status">Status</label>
+        <select id="status" name="status">
+          <option value="">All</option>
+          <option>Ongoing</option>
+          <option>Completed</option>
+          <option>New</option>
+          <option>Top Rated</option>
+          <option>Popular</option>
+          <option>Classic</option>
+          <option>Indie</option>
+          <option>DC</option>
+        </select>
+      </div>
+
+      <button class="btn" type="reset" id="reset-filters">Reset</button>
+    </form>
+
+    <p class="results-line"><span id="match-count">12</span> results</p>
+
+    <section class="grid-books">
+      <a class="book-card" href="#naruto" data-title="naruto" data-author="masashi kishimoto" data-genres="shōnen,adventure" data-status="completed,classic">
+        <img class="book-cover" src="https://upload.wikimedia.org/wikipedia/en/9/94/NarutoCoverTankobon1.jpg">
+        <div class="book-body">
+          <p class="book-title">Naruto</p>
+          <p class="book-meta">Masashi Kishimoto • Shōnen</p>
+          <div class="badges"><span class="badge">Classic</span></div>
+        </div>
+      </a>
+
+      <a class="book-card" href="#fullmetal" data-title="fullmetal alchemist" data-author="hiromu arakawa" data-genres="adventure,fantasy" data-status="completed,top rated">
+        <img class="book-cover" src="https://upload.wikimedia.org/wikipedia/en/8/8a/Fullmetal_alchemist_manga_volume_1_cover.jpg">
+        <div class="book-body">
+          <p class="book-title">Fullmetal Alchemist</p>
+          <p class="book-meta">Hiromu Arakawa • Adventure</p>
+          <div class="badges"><span class="badge accent">Top Rated</span></div>
+        </div>
+      </a>
+
+      <a class="book-card" href="#aot" data-title="attack on titan" data-author="hajime isayama" data-genres="dark fantasy" data-status="completed">
+        <img class="book-cover" src="https://upload.wikimedia.org/wikipedia/en/5/5a/Attack_on_Titan_volume_1_cover.jpg">
+        <div class="book-body">
+          <p class="book-title">Attack on Titan</p>
+          <p class="book-meta">Hajime Isayama • Dark Fantasy</p>
+          <div class="badges"><span class="badge">Completed</span></div>
+        </div>
+      </a>
+
+      <a class="book-card" href="#chainsawman" data-title="chainsaw man" data-author="tatsuki fujimoto" data-genres="horror,dark comedy" data-status="ongoing,new">
+        <img class="book-cover" src="https://upload.wikimedia.org/wikipedia/en/6/62/Chainsaw_Man_volume_1_cover.jpg">
+        <div class="book-body">
+          <p class="book-title">Chainsaw Man</p>
+          <p class="book-meta">Tatsuki Fujimoto • Horror</p>
+          <div class="badges"><span class="badge">New</span></div>
+        </div>
+      </a>
+
+      <a class="book-card" href="#mha" data-title="my hero academia" data-author="kōhei horikoshi" data-genres="superhero,shōnen" data-status="ongoing">
+        <img class="book-cover" src="https://upload.wikimedia.org/wikipedia/en/0/03/My_Hero_Academia_Volume_1.png">
+        <div class="book-body">
+          <p class="book-title">My Hero Academia</p>
+          <p class="book-meta">Kōhei Horikoshi • Superhero</p>
+          <div class="badges"><span class="badge">Ongoing</span></div>
+        </div>
+      </a>
+
+      <a class="book-card" href="#deathnote" data-title="death note" data-author="tsugumi ohba,takeshi obata" data-genres="thriller,mystery" data-status="completed">
+        <img class="book-cover" src="https://upload.wikimedia.org/wikipedia/en/6/6f/Death_Note_Vol_1.jpg">
+        <div class="book-body">
+          <p class="book-title">Death Note</p>
+          <p class="book-meta">Tsugumi Ohba & Takeshi Obata • Thriller</p>
+          <div class="badges"><span class="badge">Mystery</span></div>
+        </div>
+      </a>
+
+      <a class="book-card" href="#saga" data-title="saga" data-author="brian k. vaughan,fiona staples" data-genres="space opera,fantasy" data-status="ongoing,indie">
+        <img class="book-cover" src="https://upload.wikimedia.org/wikipedia/en/8/87/Saga1coverByFionaStaples.jpeg">
+        <div class="book-body">
+          <p class="book-title">Saga</p>
+          <p class="book-meta">Brian K. Vaughan & Fiona Staples • Space Opera</p>
+          <div class="badges"><span class="badge">Indie</span></div>
+        </div>
+      </a>
+
+      <a class="book-card" href="#batman" data-title="batman the long halloween" data-author="jeph loeb,tim sale" data-genres="detective,crime noir" data-status="completed,dc">
+        <img class="book-cover" src="https://upload.wikimedia.org/wikipedia/en/9/9c/Batman_thelonghalloween.jpg">
+        <div class="book-body">
+          <p class="book-title">Batman: The Long Halloween</p>
+          <p class="book-meta">Jeph Loeb & Tim Sale • Detective</p>
+          <div class="badges"><span class="badge">DC</span></div>
+        </div>
+      </a>
+    </section>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="page about">
+    <h2 class="giant">HEADER: ABOUT WEBSITE NAME</h2>
+    <div class="divider"></div>
+    <div class="body-box">
+      <p>Hi! I created this blog as a home for all the worlds I get lost in. Manga has always been more than entertainment for me — it’s storytelling, art, emotion, and creativity wrapped together in ways nothing else can match. Here, I share the series that left an impact on me, the ones I can’t stop talking about, and the new gems I discover along the way. Whether you’re a longtime fan or just getting started, I hope my blog inspires you to explore new stories and fall in love with manga the way I did! </p>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="page contact">
+    <h2 class="giant" style="text-align:center; margin:10px 0 0;">HEADER: CONTACT US</h2>
+    <div class="box">
+      <div class="form-grid">
+        <div class="fake-input">NAME</div>
+        <div class="fake-input">EMAIL</div>
+        <div class="fake-input fake-textarea full">MESSAGE</div>
+        <div class="fake-btn full">SUBMIT</div>
+      </div>
+    </div>
+    <div class="box" style="text-align:center; font-size:34px;">
+      SOCIAL MEDIA LINKS: INSTAGRAM | DISCORD | X
+    </div>
+  </section>
+</main>
+
+<!-- ===== DETAIL PANELS (click a card) ===== -->
+<section id="onepiece" class="detail-panel">
+  <div class="detail-wrap">
+    <div class="detail-header">
+      <div class="detail-title">One Piece</div>
+      <a class="detail-close" href="#">CLOSE ✕</a>
+    </div>
+    <div class="detail-grid">
+      <img class="detail-cover" src="https://upload.wikimedia.org/wikipedia/en/2/2c/OnePieceVol1Cover.jpg">
+      <div>
+        <div class="detail-section">
+          <h3 class="detail-h">Summary</h3>
+          <p class="detail-p">A high-seas adventure following Monkey D. Luffy and the Straw Hat Pirates as they hunt for the legendary treasure “One Piece” and chase their dreams across the Grand Line.</p>
+        </div>
+        <div class="detail-meta">
+          <div class="detail-box">
+            <h4 class="detail-h">Characters</h4>
+            <ul class="detail-ul">
+              <li>Monkey D. Luffy</li>
+              <li>Roronoa Zoro</li>
+              <li>Nami</li>
+              <li>Usopp</li>
+              <li>Sanji</li>
+            </ul>
+          </div>
+          <div class="detail-box">
+            <h4 class="detail-h">Details</h4>
+            <p class="detail-p"><strong>Author:</strong> Eiichiro Oda<br>
+              <strong>Genre:</strong> Adventure, Shōnen<br><strong>Status:</strong> Ongoing
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="demonslayer" class="detail-panel">
+  <div class="detail-wrap">
+    <div class="detail-header">
+      <div class="detail-title">Demon Slayer: Kimetsu no Yaiba</div>
+      <a class="detail-close" href="#">CLOSE ✕</a>
+    </div>
+    <div class="detail-grid">
+      <img class="detail-cover" src="https://upload.wikimedia.org/wikipedia/en/5/5d/Kimetsu_no_Yaiba_Volume_1.jpg">
+      <div>
+        <div class="detail-section">
+          <h3 class="detail-h">Summary</h3>
+          <p class="detail-p">Tanjiro Kamado becomes a Demon Slayer after his family is attacked and his sister Nezuko is turned into a demon. He seeks a cure while battling powerful foes.</p>
+        </div>
+        <div class="detail-meta">
+          <div class="detail-box">
+            <h4 class="detail-h">Characters</h4>
+            <ul class="detail-ul">
+              <li>Tanjiro Kamado</li>
+              <li>Nezuko Kamado</li>
+              <li>Zenitsu Agatsuma</li>
+              <li>Inosuke Hashibira</li>
+              <li>Giyu Tomioka</li>
+            </ul>
+          </div>
+          <div class="detail-box">
+            <h4 class="detail-h">Details</h4>
+            <p class="detail-p"><strong>Author:</strong> Koyoharu Gotouge<br>
+              <strong>Genre:</strong> Dark Fantasy<br><strong>Status:</strong> Completed
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="spyfamily" class="detail-panel">
+  <div class="detail-wrap">
+    <div class="detail-header">
+      <div class="detail-title">SPY×FAMILY</div>
+      <a class="detail-close" href="#">CLOSE ✕</a>
+    </div>
+    <div class="detail-grid">
+      <img class="detail-cover" src="https://upload.wikimedia.org/wikipedia/en/1/19/Spy_x_Family_volume_1_cover.jpg">
+      <div>
+        <div class="detail-section">
+          <h3 class="detail-h">Summary</h3>
+          <p class="detail-p">A spy creates a fake family to complete a mission—unaware his “wife” is an assassin and his “daughter” is a telepath, leading to heartwarming chaos.</p>
+        </div>
+        <div class="detail-meta">
+          <div class="detail-box">
+            <h4 class="detail-h">Characters</h4>
+            <ul class="detail-ul">
+              <li>Loid Forger</li>
+              <li>Yor Forger</li>
+              <li>Anya Forger</li>
+              <li>Bond Forger</li>
+            </ul>
+          </div>
+          <div class="detail-box">
+            <h4 class="detail-h">Details</h4>
+            <p class="detail-p"><strong>Author:</strong> Tatsuya Endo<br>
+              <strong>Genre:</strong> Comedy, Slice of Life<br><strong>Status:</strong> Ongoing
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="jjk" class="detail-panel">
+  <div class="detail-wrap">
+    <div class="detail-header">
+      <div class="detail-title">Jujutsu Kaisen</div>
+      <a class="detail-close" href="#">CLOSE ✕</a>
+    </div>
+    <div class="detail-grid">
+      <img class="detail-cover" src="https://upload.wikimedia.org/wikipedia/en/6/6f/Jujutsu_Kaisen_Volume_1.jpg">
+      <div>
+        <div class="detail-section">
+          <h3 class="detail-h">Summary</h3>
+          <p class="detail-p">Yuji Itadori becomes host to a powerful curse and joins jujutsu sorcerers to exorcise malevolent spirits and keep humanity safe.</p>
+        </div>
+        <div class="detail-meta">
+          <div class="detail-box">
+            <h4 class="detail-h">Characters</h4>
+            <ul class="detail-ul">
+              <li>Yuji Itadori</li>
+              <li>Megumi Fushiguro</li>
+              <li>Nobara Kugisaki</li>
+              <li>Satoru Gojo</li>
+              <li>Ryomen Sukuna</li>
+            </ul>
+          </div>
+          <div class="detail-box">
+            <h4 class="detail-h">Details</h4>
+            <p class="detail-p"><strong>Author:</strong> Gege Akutami<br>
+              <strong>Genre:</strong> Supernatural, Action<br><strong>Status:</strong> Ongoing
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="naruto" class="detail-panel">
+  <div class="detail-wrap">
+    <div class="detail-header">
+      <div class="detail-title">Naruto</div>
+      <a class="detail-close" href="#">CLOSE ✕</a>
+    </div>
+    <div class="detail-grid">
+      <img class="detail-cover" src="https://upload.wikimedia.org/wikipedia/en/9/94/NarutoCoverTankobon1.jpg">
+      <div>
+        <div class="detail-section">
+          <h3 class="detail-h">Summary</h3>
+          <p class="detail-p">Naruto Uzumaki trains to become Hokage while learning to control the Nine-Tails fox spirit sealed within him.</p>
+        </div>
+        <div class="detail-meta">
+          <div class="detail-box">
+            <h4 class="detail-h">Characters</h4>
+            <ul class="detail-ul">
+              <li>Naruto Uzumaki</li>
+              <li>Sasuke Uchiha</li>
+              <li>Sakura Haruno</li>
+              <li>Kakashi Hatake</li>
+            </ul>
+          </div>
+          <div class="detail-box">
+            <h4 class="detail-h">Details</h4>
+            <p class="detail-p"><strong>Author:</strong> Masashi Kishimoto<br>
+              <strong>Genre:</strong> Shōnen, Adventure<br><strong>Status:</strong> Completed
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="fullmetal" class="detail-panel">
+  <div class="detail-wrap">
+    <div class="detail-header">
+      <div class="detail-title">Fullmetal Alchemist</div>
+      <a class="detail-close" href="#">CLOSE ✕</a>
+    </div>
+    <div class="detail-grid">
+      <img class="detail-cover" src="https://upload.wikimedia.org/wikipedia/en/8/8a/Fullmetal_alchemist_manga_volume_1_cover.jpg">
+      <div>
+        <div class="detail-section">
+          <h3 class="detail-h">Summary</h3>
+          <p class="detail-p">Brothers Edward and Alphonse Elric use alchemy in a quest to restore their bodies after a forbidden transmutation goes wrong, uncovering a vast conspiracy.</p>
+        </div>
+        <div class="detail-meta">
+          <div class="detail-box">
+            <h4 class="detail-h">Characters</h4>
+            <ul class="detail-ul">
+              <li>Edward Elric</li>
+              <li>Alphonse Elric</li>
+              <li>Winry Rockbell</li>
+              <li>Roy Mustang</li>
+            </ul>
+          </div>
+          <div class="detail-box">
+            <h4 class="detail-h">Details</h4>
+            <p class="detail-p"><strong>Author:</strong> Hiromu Arakawa<br>
+              <strong>Genre:</strong> Adventure, Fantasy<br><strong>Status:</strong> Completed
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="aot" class="detail-panel">
+  <div class="detail-wrap">
+    <div class="detail-header">
+      <div class="detail-title">Attack on Titan</div>
+      <a class="detail-close" href="#">CLOSE ✕</a>
+    </div>
+    <div class="detail-grid">
+      <img class="detail-cover" src="https://upload.wikimedia.org/wikipedia/en/5/5a/Attack_on_Titan_volume_1_cover.jpg">
+      <div>
+        <div class="detail-section">
+          <h3 class="detail-h">Summary</h3>
+          <p class="detail-p">Humanity battles towering Titans behind walled cities as secrets about their world unravel.</p>
+        </div>
+        <div class="detail-meta">
+          <div class="detail-box">
+            <h4 class="detail-h">Characters</h4>
+            <ul class="detail-ul">
+              <li>Eren Yeager</li>
+              <li>Mikasa Ackerman</li>
+              <li>Armin Arlert</li>
+              <li>Levi Ackerman</li>
+            </ul>
+          </div>
+          <div class="detail-box">
+            <h4 class="detail-h">Details</h4>
+            <p class="detail-p"><strong>Author:</strong> Hajime Isayama<br>
+              <strong>Genre:</strong> Dark Fantasy<br><strong>Status:</strong> Completed
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="chainsawman" class="detail-panel">
+  <div class="detail-wrap">
+    <div class="detail-header">
+      <div class="detail-title">Chainsaw Man</div>
+      <a class="detail-close" href="#">CLOSE ✕</a>
+    </div>
+    <div class="detail-grid">
+      <img class="detail-cover" src="https://upload.wikimedia.org/wikipedia/en/6/62/Chainsaw_Man_volume_1_cover.jpg">
+      <div>
+        <div class="detail-section">
+          <h3 class="detail-h">Summary</h3>
+          <p class="detail-p">Denji, fused with his devil-dog Pochita, becomes Chainsaw Man and navigates violent devil hunts, twisted politics, and messy relationships.</p>
+        </div>
+        <div class="detail-meta">
+          <div class="detail-box">
+            <h4 class="detail-h">Characters</h4>
+            <ul class="detail-ul">
+              <li>Denji</li>
+              <li>Power</li>
+              <li>Aki Hayakawa</li>
+              <li>Makima</li>
+            </ul>
+          </div>
+          <div class="detail-box">
+            <h4 class="detail-h">Details</h4>
+            <p class="detail-p"><strong>Author:</strong> Tatsuki Fujimoto<br>
+              <strong>Genre:</strong> Horror, Dark Comedy<br><strong>Status:</strong> Ongoing
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="mha" class="detail-panel">
+  <div class="detail-wrap">
+    <div class="detail-header">
+      <div class="detail-title">My Hero Academia</div>
+      <a class="detail-close" href="#">CLOSE ✕</a>
+    </div>
+    <div class="detail-grid">
+      <img class="detail-cover" src="https://upload.wikimedia.org/wikipedia/en/0/03/My_Hero_Academia_Volume_1.png">
+      <div>
+        <div class="detail-section">
+          <h3 class="detail-h">Summary</h3>
+          <p class="detail-p">In a world of superpowers called Quirks, Izuku Midoriya trains to become a top hero despite being born without powers.</p>
+        </div>
+        <div class="detail-meta">
+          <div class="detail-box">
+            <h4 class="detail-h">Characters</h4>
+            <ul class="detail-ul">
+              <li>Izuku Midoriya</li>
+              <li>Katsuki Bakugo</li>
+              <li>Shoto Todoroki</li>
+              <li>All Might</li>
+            </ul>
+          </div>
+          <div class="detail-box">
+            <h4 class="detail-h">Details</h4>
+            <p class="detail-p"><strong>Author:</strong> Kōhei Horikoshi<br>
+              <strong>Genre:</strong> Superhero, Shōnen<br><strong>Status:</strong> Ongoing
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="deathnote" class="detail-panel">
+  <div class="detail-wrap">
+    <div class="detail-header">
+      <div class="detail-title">Death Note</div>
+      <a class="detail-close" href="#">CLOSE ✕</a>
+    </div>
+    <div class="detail-grid">
+      <img class="detail-cover" src="https://upload.wikimedia.org/wikipedia/en/6/6f/Death_Note_Vol_1.jpg">
+      <div>
+        <div class="detail-section">
+          <h3 class="detail-h">Summary</h3>
+          <p class="detail-p">A genius student discovers a supernatural notebook that can kill anyone whose name is written in it, triggering a tense cat-and-mouse game with a master detective.</p>
+        </div>
+        <div class="detail-meta">
+          <div class="detail-box">
+            <h4 class="detail-h">Characters</h4>
+            <ul class="detail-ul">
+              <li>Light Yagami</li>
+              <li>L</li>
+              <li>Misa Amane</li>
+              <li>Ryuk</li>
+            </ul>
+          </div>
+          <div class="detail-box">
+            <h4 class="detail-h">Details</h4>
+            <p class="detail-p"><strong>Authors:</strong> Tsugumi Ohba & Takeshi Obata<br>
+              <strong>Genre:</strong> Thriller, Mystery<br><strong>Status:</strong> Completed
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="saga" class="detail-panel">
+  <div class="detail-wrap">
+    <div class="detail-header">
+      <div class="detail-title">Saga</div>
+      <a class="detail-close" href="#">CLOSE ✕</a>
+    </div>
+    <div class="detail-grid">
+      <img class="detail-cover" src="https://upload.wikimedia.org/wikipedia/en/8/87/Saga1coverByFionaStaples.jpeg">
+      <div>
+        <div class="detail-section">
+          <h3 class="detail-h">Summary</h3>
+          <p class="detail-p">An epic space opera about star-crossed lovers from warring species who fight to protect their family across a hostile galaxy.</p>
+        </div>
+        <div class="detail-meta">
+          <div class="detail-box">
+            <h4 class="detail-h">Characters</h4>
+            <ul class="detail-ul">
+              <li>Alana</li>
+              <li>Marko</li>
+              <li>Hazel</li>
+              <li>The Will</li>
+            </ul>
+          </div>
+          <div class="detail-box">
+            <h4 class="detail-h">Details</h4>
+            <p class="detail-p"><strong>Creators:</strong> Brian K. Vaughan & Fiona Staples<br>
+              <strong>Genre:</strong> Space Opera, Fantasy<br><strong>Status:</strong> Ongoing
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="batman" class="detail-panel">
+  <div class="detail-wrap">
+    <div class="detail-header">
+      <div class="detail-title">Batman: The Long Halloween</div>
+      <a class="detail-close" href="#">CLOSE ✕</a>
+    </div>
+    <div class="detail-grid">
+      <img class="detail-cover" src="https://upload.wikimedia.org/wikipedia/en/9/9c/Batman_thelonghalloween.jpg">
+      <div>
+        <div class="detail-section">
+          <h3 class="detail-h">Summary</h3>
+          <p class="detail-p">Batman hunts a serial killer named Holiday while navigating Gotham’s mob war and early encounters with iconic rogues.</p>
+        </div>
+        <div class="detail-meta">
+          <div class="detail-box">
+            <h4 class="detail-h">Characters</h4>
+            <ul class="detail-ul">
+              <li>Bruce Wayne / Batman</li>
+              <li>Harvey Dent</li>
+              <li>James Gordon</li>
+              <li>Carmine Falcone</li>
+            </ul>
+          </div>
+          <div class="detail-box">
+            <h4 class="detail-h">Details</h4>
+            <p class="detail-p"><strong>Creators:</strong> Jeph Loeb & Tim Sale<br>
+              <strong>Genre:</strong> Detective, Crime Noir<br><strong>Status:</strong> Completed
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  © 2025 Manga Site • All Rights Reserved
+  <div class="subline">This is a wireframe. Images, buttons, and form fields are placeholders.</div>
+</footer>
+
+<!-- ===== FILTER LOGIC (Vanilla JS) ===== -->
+<script>
+  (function() {
+    const qInput = document.getElementById('q');
+    const genreSel = document.getElementById('genre');
+    const statusSel = document.getElementById('status');
+    const resetBtn = document.getElementById('reset-filters');
+    const countSpan = document.getElementById('match-count');
+    // All cards across Home + Browse
+    const cards = Array.from(document.querySelectorAll('.book-card'));
+
+    function norm(s) {
+      return (s || '').toLowerCase().trim();
+    }
+
+    function matches(card) {
+      const q = norm(qInput?.value);
+      const genre = norm(genreSel?.value);
+      const status = norm(statusSel?.value);
+      const title = (card.dataset.title || '').toLowerCase();
+      const author = (card.dataset.author || '').toLowerCase();
+      const genres = (card.dataset.genres || '').toLowerCase();
+      const statuses = (card.dataset.status || '').toLowerCase();
+      const textOK = !q || title.includes(q) || author.includes(q);
+      const genreOK = !genre || genres.split(',').map(norm).includes(genre);
+      const statusOK = !status || statuses.split(',').map(norm).includes(status);
+      return textOK && genreOK && statusOK;
+    }
+
+    function applyFilters() {
+      let visible = 0;
+      cards.forEach(card => {
+        if (matches(card)) {
+          card.classList.remove('hidden');
+          visible++;
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+      if (countSpan) {
+        countSpan.textContent = visible;
+      }
+    }
+    if (qInput) {
+      qInput.addEventListener('input', applyFilters);
+    }
+    if (genreSel) {
+      genreSel.addEventListener('change', applyFilters);
+    }
+    if (statusSel) {
+      statusSel.addEventListener('change', applyFilters);
+    }
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        setTimeout(applyFilters, 0); // wait for native reset
+      });
+    }
+    applyFilters(); // initial
+  })();
+</script>
